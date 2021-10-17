@@ -29,15 +29,17 @@ function App() {
       fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
         .then(res => res.json())
         .then(result => {
-          setWeather(result);
-          console.log('Today: ', result);
-          setBackground((typeof result.main != "undefined") ? ((result.main.temp > 16.0) ? 'warm' : '') : '');
-          fetch(`${api.base}onecall?lat=${result.coord.lat}&lon=${result.coord.lon}&units=metric&APPID=${api.key}`)
-            .then(res => res.json())
-            .then(result => {
-              setFcDaily(result.daily.splice(1, 5));
-              console.log('All: ', result);
-            });
+          if (typeof result.main != "undefined") {
+            setWeather(result);
+            console.log('Today: ', result);
+            setBackground((typeof result.main != "undefined") ? ((result.main.temp > 16.0) ? 'warm' : '') : '');
+            fetch(`${api.base}onecall?lat=${result.coord.lat}&lon=${result.coord.lon}&units=metric&APPID=${api.key}`)
+              .then(res => res.json())
+              .then(result => {
+                setFcDaily(result.daily.splice(1, 5));
+                console.log('All: ', result);
+              });
+          }
         });
       setQuery('');
     }
